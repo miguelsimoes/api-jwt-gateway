@@ -1,0 +1,74 @@
+#
+# Base configuration of the security to be implemented to the application
+security:
+    #
+    # The list of providers that will be enabled for the application
+    providers:
+        #
+        # Name of the user provider to be used by the application
+        default:
+            #
+            # Configuration of the default user provider in the application
+            jwt: ~
+    #
+    # List of firewalls that are enabled on the application to ensure access is
+    # grantes properly to each user roles
+    firewalls:
+        #
+        # The assets firewall is required to allow access to the assets available
+        # in the application (if any are available)
+        assets:
+            #
+            # The pattern on which the firewall will be triggered, and be sure
+            # to include all the folders where assets may be present
+            pattern: "^/(build)/"
+            #
+            # Whether the security layer is enabled for the firewall
+            security: false
+        #
+        # The development firewall is required to allow access to features only
+        # enabled while under the development environment
+        development:
+            #
+            # The pattern on which the firewall will be triggered
+            pattern: "^/(_(profiler|wdt))/"
+            #
+            # Whether the security layer is enabled for the firewall
+            security: false
+        #
+        # Definition of the default firewall to be used on the application
+        default:
+            #
+            # We will allow anonymous usage since not all endpoints will require
+            # authentication, so we will leave the access denial to the controllers
+            # or the access_control configuration
+            anonymous: true
+            #
+            # The pattern on which the firewall will be triggered
+            pattern: "^/"
+            #
+            # The user provider to be used by the application on the current firewall
+            jwt:
+                #
+                # The path or route address where we will check whether the request
+                # requires authentication
+                check_path: "login_service"
+                #
+                # The path or route address where we will forward the user to
+                # execute the authentication
+                login_path: "login_service"
+            #
+            # Not documented on symfony (but will always be true on 4.0)
+            logout_on_user_change: true
+            #
+            # Whether the security layer is enabled for the firewall
+            security: true
+            #
+            # Whether we are dealing with a stateless authentication
+            stateless: true
+    #
+    # Verifies the security rules required for each of the provided accesses
+    access_control:
+        - { path: "^/login", roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: "^/test" , roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: "^/"     , roles: IS_AUTHENTICATED_FULLY }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <imports>
+        <import resource="security/token_extractor.xml" />
+    </imports>
+    <services>
+        <service id="security.authentication.entry_point.jwt" class="Application\Security\Http\EntryPoint\JWTAuthenticationEntryPoint" abstract="true">
+            <argument type="service" id="http_kernel" />
+            <argument type="service" id="security.http_utils" />
+        </service>
+        <service id="security.authentication.provider.jwt" class="Application\Security\Core\Authentication\Provider\JWTAuthenticationProvider" abstract="true" public="false">
+            <argument type="service" id="jwt.manager" />
+            <argument type="string" /> <!--- To be replaced with the algorithm used to encrypt the token -->
+            <argument type="string">%kernel.secret%</argument>
+        </service>
+        <service id="security.authentication.listener.jwt" class="Application\Security\Http\Firewall\JWTListener" abstract="true">
+            <argument type="service" id="security.http_utils" />
+            <argument type="service" id="security.authentication.manager" />
+            <argument type="collection" />
+            <argument type="collection" />
+        </service>
+        <service id="security.user.provider.jwt" class="Application\Security\Core\User\JWTUserProvider" abstract="true">
+            <argument type="string" /> <!-- To be replaced with the class name used to generate the user instances -->
+        </service>
+    </services>
+</container>

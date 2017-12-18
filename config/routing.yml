@@ -1,0 +1,11 @@
+application:
+    resource: "@ApplicationBundle/Controller/"
+    prefix  : "/"
+    type    : "annotation"
+
+login_service:
+    path: "/login"
+    defaults:
+        _controller: "FrameworkBundle:Redirect:urlRedirect"
+        path: "https://accounts.google.com"
+        permanent: true
